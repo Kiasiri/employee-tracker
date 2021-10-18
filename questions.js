@@ -110,3 +110,12 @@ const deleteDeptQuestion = [
     choices: getDept,
   },
 ];
+module.exports = {
+  addEmployeeQuestions: addEmployeeQuestions,
+  employeeAction: choose,
+  updateManager: updateManager,
+  updateRole: updateRole,
+  removeEmployee: removeEmployee,
+  deleteRoleQ: deleteRole,
+  deleteDeptQuestion: deleteDeptQuestion,
+};
