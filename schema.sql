@@ -23,6 +23,8 @@ CREATE TABLE employee(
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     job_id INT,
+    manager_id INT DEFAULT NULL,
     PRIMARY KEY(id),
-    FOREIGN KEY(job_id) REFERENCES job(id)
+    FOREIGN KEY(job_id) REFERENCES job(id),
+    FOREIGN KEY(manager_id) REFERENCES employee(id)
 );
