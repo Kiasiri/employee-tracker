@@ -55,3 +55,58 @@ const addEmployeeQuestions = [
     choices: getManagers,
   },
 ];
+const updateManager = [
+  {
+    name: "name",
+    type: "list",
+    message: "Which employee would you like to update?",
+    choices: getEmployees,
+  },
+  {
+    name: "updateManager",
+    type: "list",
+    message: "Whos is their new manager?",
+    choices: getManagers,
+  },
+];
+
+const updateRole = [
+  {
+    name: "name",
+    type: "list",
+    message: "Which employee would you like to update?",
+    choices: getEmployees,
+  },
+  {
+    name: "updateRole",
+    type: "input",
+    message: "Which new role will the employee now assume?",
+  },
+];
+
+const removeEmployee = [
+  {
+    name: "remove",
+    type: "list",
+    message: "Which employee would you like to remove?",
+    choices: getEmployees,
+  },
+];
+
+const deleteRole = [
+  {
+    name: "role",
+    message: "Which role would you like to remove?",
+    type: "list",
+    choices: getRole,
+  },
+];
+
+const deleteDeptQuestion = [
+  {
+    name: "dept",
+    message: "Which department would you like to remove?",
+    type: "list",
+    choices: getDept,
+  },
+];
