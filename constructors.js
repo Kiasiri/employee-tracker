@@ -9,7 +9,7 @@ function Department(name) {
   this.name = name;
 }
 
-function Role(title, salary, department) {
+function Job(title, salary, department) {
   this.title = title;
   this.salary = salary;
   this.department_id = department;
@@ -18,5 +18,5 @@ function Role(title, salary, department) {
 module.exports = {
   Employee: Employee,
   Department: Department,
-  Role: Role,
+  Job: Job,
 };
