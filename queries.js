@@ -7,6 +7,38 @@ const connection = mysql.createConnection({
   database: process.env.DB,
 });
 
+function addJob(job) {
+  const sql = "INSERT INTO job SET ?";
+  connection.query(
+    sql,
+    {
+      title: job.title,
+      salary: job.salary,
+      department_id: job.department_id,
+    },
+    (err, res) => {
+      if (err) throw err;
+    }
+  );
+  return new Promise(function (resolve, reject) {
+    const sql = "SELECT * FROM job WHERE ? AND ? AND ?";
+    connection.query(
+      sql,
+      [
+        { title: job.title },
+        { salary: job.salary },
+        { department_id: job.department_id },
+      ],
+      (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(res[0].id);
+      }
+    );
+  });
+}
+
 function addEmployee(employee) {
   return new Promise(function (resolve, reject) {
     const sql = "INSERT INTO employee SET ?";
@@ -15,7 +47,7 @@ function addEmployee(employee) {
       {
         first_name: employee.first_name,
         last_name: employee.last_name,
-        role_id: employee.role_id,
+        job_id: employee.job_id,
         manager_id: employee.manager,
       },
       (err, res) => {
@@ -28,4 +60,12 @@ function addEmployee(employee) {
   });
 }
 
-module.exports = { addEmployee: addEmployee };
+//TODO: make functions that add roles and departments
+//TODO: make functions that update job department and employees
+//TODO: make functions that delete employee roles and departments
+
+module.exports = {
+  addEmployee: addEmployee,
+  addJob: addJob,
+  addDepartment: addDepartment,
+};
