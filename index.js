@@ -1,6 +1,6 @@
 require("dotenv").config();
 const inquirer = require("./ask");
-const { addEmployeeQuestions, choose } = require("./questions");
+const { addEmployeeQuestions, choose, updateManager } = require("./questions");
 const mysql = require("mysql2");
 const { Department, Employee, Job } = require("./constructors");
 const { addJob, addEmployee } = require("./queries");

@@ -12,5 +12,4 @@ function inquirerAsk(questions) {
       });
   });
 }
-
 module.exports = inquirerAsk;

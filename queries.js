@@ -1,10 +1,9 @@
 const mysql = require("mysql2");
 const connection = mysql.createConnection({
   host: "localhost",
-  port: process.env.PORT,
   user: process.env.user,
   password: process.env.password,
-  database: process.env.DB,
+  database: process.env.database,
 });
 
 function addJob(job) {
