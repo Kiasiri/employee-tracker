@@ -1,9 +1,16 @@
 require("dotenv").config();
 const inquirer = require("./ask");
-const { addEmployeeQuestions, choose, updateManager } = require("./questions");
+const {
+  addEmployeeQuestions,
+  choose,
+  updateManager,
+  updateJob,
+  deleteJobQuestion,
+  updateEmployee,
+} = require("./questions");
 const mysql = require("mysql2");
 const { Department, Employee, Job } = require("./constructors");
-const { addJob, addEmployee } = require("./queries");
+const { addJob, addEmployee, deleteJob } = require("./queries");
 const connection = mysql.createConnection({
   host: "localhost",
   user: process.env.user,
@@ -37,6 +44,11 @@ async function selectionFunc() {
           employeeData.manager
         );
         await addEmployee(employee);
+        selectionFunc();
+        break;
+      case "Remove Job":
+        let deleteJobAnswer = await inquirer(deleteJobQuestion);
+        await deleteRole(deleteJobAnswer);
         selectionFunc();
         break;
     }
