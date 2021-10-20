@@ -82,7 +82,26 @@ function getJob() {
     });
   });
 }
+
 //End of job functions
+//update emplyee job
+
+function updateEmployeeJob(employee) {
+  return new Promise(function (resolve, reject) {
+    const employeeJobId = [
+      { title: employee.updateJob },
+      { id: employee.name },
+    ];
+    const sql = "UPDATE job SET ? WHERE ?";
+    connection.query(sql, employeeJobId, (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(console.log(`Employee's job changed!`));
+    });
+  });
+}
+
 //Beggining of employee functions
 function addEmployee(employee) {
   return new Promise(function (resolve, reject) {
@@ -173,25 +192,52 @@ function getManagers() {
     });
   });
 }
-function getDeptartment() {
+function getDepartment() {
   return new Promise(function (resolve, reject) {
-    const selectDept = "SELECT department.name, department.id FROM department";
-    connection.query(selectDept, (err, res) => {
+    const selectDepartment =
+      "SELECT department.name, department.id FROM department";
+    connection.query(selectDepartment, (err, res) => {
       if (err) throw err;
-      const deptChoices = [];
-      res.forEach((dept) => {
+      const departmentChoices = [];
+      res.forEach((department) => {
         let obj = {};
         Object.assign(obj, {
-          name: `${dept.name}`,
+          name: `${department.name}`,
         });
-        Object.assign(obj, { value: `${dept.id}` });
-        deptChoices.push(...[obj]);
+        Object.assign(obj, { value: `${department.id}` });
+        departmentChoices.push(...[obj]);
       });
-      resolve(deptChoices);
+      resolve(departmentChoices);
     });
   });
 }
 
+function deleteDepartment(remove) {
+  return new Promise(function (resolve, reject) {
+    const sql = "DELETE FROM department WHERE ?";
+    connection.query(sql, { id: remove.department }, (err, res) => {
+      if (err) {
+        return reject(
+          "Please remove all employees from this department before deleting"
+        );
+      }
+      resolve(console.log(`Department removed`));
+    });
+  });
+}
+
+function viewBudget() {
+  return new Promise(function (resolve, reject) {
+    const sql =
+      "SELECT department.name as 'Department', Sum(job.salary) AS Budget FROM department RIGHT JOIN job on job.department_id = department.id GROUP BY department.name;";
+    connection.query(sql, (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(console.table(res));
+    });
+  });
+}
 //TODO: make function that add departments
 //TODO: make functions that update department and employees
 //TODO: make functions that delete departments
@@ -207,7 +253,7 @@ module.exports = {
   getManagers: getManagers,
   getEmployees: getEmployees,
   updateEmployeeManager: updateEmployeeManager,
-  getDepartment: getDeptartment,
+  getDepartment: getDepartment,
   deleteDepartment: deleteDepartment,
   updateEmployeeJob: updateEmployeeJob,
   viewEmployee: viewEmployee,
