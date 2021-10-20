@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
-
-function inquirerAsk(questions) {
+const questions = require("./questions");
+function ask(questions) {
+  console.log(questions);
   return new Promise(function (resolve, reject) {
     inquirer
       .prompt(questions)
@@ -12,4 +13,4 @@ function inquirerAsk(questions) {
       });
   });
 }
-module.exports = inquirerAsk;
+module.exports = ask;

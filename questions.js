@@ -57,22 +57,7 @@ const addEmployeeQuestions = [
     choices: getManagers,
   },
 ];
-const updateManager = [
-  {
-    name: "name",
-    type: "list",
-    message: "Which employee would you like to update?",
-    choices: getEmployees,
-  },
-  {
-    name: "updateManager",
-    type: "list",
-    message: "Whos is their new manager?",
-    choices: getManagers,
-  },
-];
-
-// const updateRole = [
+// const updateManager = [
 //   {
 //     name: "name",
 //     type: "list",
@@ -80,7 +65,22 @@ const updateManager = [
 //     choices: getEmployees,
 //   },
 //   {
-//     name: "updateRole",
+//     name: "updateManager",
+//     type: "list",
+//     message: "Whos is their new manager?",
+//     choices: getManagers,
+//   },
+// ];
+
+// const updateJob = [
+//   {
+//     name: "name",
+//     type: "list",
+//     message: "Which employee would you like to update?",
+//     choices: getEmployees,
+//   },
+//   {
+//     name: "updateJob",
 //     type: "input",
 //     message: "Which new role will the employee now assume?",
 //   },
@@ -95,12 +95,12 @@ const updateManager = [
 //   },
 // ];
 
-// const deleteRole = [
+// const deleteJob = [
 //   {
 //     name: "role",
 //     message: "Which role would you like to remove?",
 //     type: "list",
-//     choices: getRole,
+//     choices: getJob,
 //   },
 // ];
 
@@ -114,8 +114,8 @@ const updateManager = [
 // ];
 module.exports = {
   addEmployeeQuestions: addEmployeeQuestions,
-  employeeAction: choose,
-  updateManager: updateManager,
+  choose: choose,
+  //updateManager: updateManager,
   // updateRole: updateRole,
   // removeEmployee: removeEmployee,
   // deleteRoleQ: deleteRole,
