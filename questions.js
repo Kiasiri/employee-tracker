@@ -104,20 +104,20 @@ const deleteJob = [
   },
 ];
 
-// const deleteDeptQuestion = [
-//   {
-//     name: "dept",
-//     message: "Which department would you like to remove?",
-//     type: "list",
-//     choices: getDept,
-//   },
-// ];
+const deleteDeptQuestion = [
+  {
+    name: "dept",
+    message: "Which department would you like to remove?",
+    type: "list",
+    choices: getDept,
+  },
+];
 module.exports = {
   addEmployeeQuestions: addEmployeeQuestions,
   choose: choose,
   updateManager: updateManager,
   updateJob: updateJob,
-  // removeEmployee: removeEmployee,
+  removeEmployee: removeEmployee,
   deleteJob: deleteJob,
-  // deleteDeptQuestion: deleteDeptQuestion,
+  deleteDeptQuestion: deleteDeptQuestion,
 };
