@@ -1,4 +1,4 @@
-const { getManagers, getEmployees } = require("./queries");
+const { getManagers, getEmployees, getJob } = require("./queries");
 
 const selectionChoices = [
   "View all Employees",
@@ -41,9 +41,9 @@ const addEmployeeQuestions = [
     message: "What is the employee's department?",
   },
   {
-    name: "role",
+    name: "job",
     type: "input",
-    message: "What role will the employee assume?",
+    message: "What job will the employee assume?",
   },
   {
     name: "salary",
@@ -57,52 +57,52 @@ const addEmployeeQuestions = [
     choices: getManagers,
   },
 ];
-// const updateManager = [
-//   {
-//     name: "name",
-//     type: "list",
-//     message: "Which employee would you like to update?",
-//     choices: getEmployees,
-//   },
-//   {
-//     name: "updateManager",
-//     type: "list",
-//     message: "Whos is their new manager?",
-//     choices: getManagers,
-//   },
-// ];
+const updateManager = [
+  {
+    name: "name",
+    type: "list",
+    message: "Which employee would you like to update?",
+    choices: getEmployees,
+  },
+  {
+    name: "updateManager",
+    type: "list",
+    message: "Whos is their new manager?",
+    choices: getManagers,
+  },
+];
 
-// const updateJob = [
-//   {
-//     name: "name",
-//     type: "list",
-//     message: "Which employee would you like to update?",
-//     choices: getEmployees,
-//   },
-//   {
-//     name: "updateJob",
-//     type: "input",
-//     message: "Which new role will the employee now assume?",
-//   },
-// ];
+const updateJob = [
+  {
+    name: "name",
+    type: "list",
+    message: "Which employee would you like to update?",
+    choices: getEmployees,
+  },
+  {
+    name: "updateJob",
+    type: "input",
+    message: "Which new job will the employee now assume?",
+  },
+];
 
-// const removeEmployee = [
-//   {
-//     name: "remove",
-//     type: "list",
-//     message: "Which employee would you like to remove?",
-//     choices: getEmployees,
-//   },
-// ];
+const removeEmployee = [
+  {
+    name: "remove",
+    type: "list",
+    message: "Which employee would you like to remove?",
+    choices: getEmployees,
+  },
+];
 
-// const deleteJob = [
-//   {
-//     name: "role",
-//     message: "Which role would you like to remove?",
-//     type: "list",
-//     choices: getJob,
-//   },
-// ];
+const deleteJob = [
+  {
+    name: "job",
+    message: "Which job would you like to remove?",
+    type: "list",
+    choices: getJob,
+  },
+];
 
 // const deleteDeptQuestion = [
 //   {
@@ -115,9 +115,9 @@ const addEmployeeQuestions = [
 module.exports = {
   addEmployeeQuestions: addEmployeeQuestions,
   choose: choose,
-  //updateManager: updateManager,
-  // updateRole: updateRole,
+  updateManager: updateManager,
+  updateJob: updateJob,
   // removeEmployee: removeEmployee,
-  // deleteRoleQ: deleteRole,
+  deleteJob: deleteJob,
   // deleteDeptQuestion: deleteDeptQuestion,
 };

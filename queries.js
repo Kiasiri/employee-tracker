@@ -5,7 +5,7 @@ const connection = mysql.createConnection({
   password: process.env.password,
   database: process.env.database,
 });
-
+//Beggining of job funcions
 function addJob(job) {
   const sql = "INSERT INTO job SET ?";
   connection.query(
@@ -38,6 +38,52 @@ function addJob(job) {
   });
 }
 
+function deleteJob(remove) {
+  return new Promise(function (resolve, reject) {
+    const sql = "DELETE FROM job WHERE ?";
+    connection.query(sql, { id: remove.job }, (err, res) => {
+      if (err) {
+        return reject(
+          "Please remove  all employees from this job before deleting"
+        );
+      }
+      resolve(console.log(`Job removed`));
+    });
+  });
+}
+
+function viewJob() {
+  return new Promise(function (resolve, reject) {
+    const sql = "SELECT DISTINCT(title) FROM employee_tracker.job;";
+    connection.query(sql, (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(console.table(res));
+    });
+  });
+}
+
+function getJob() {
+  return new Promise(function (resolve, reject) {
+    const selectJob =
+      "SELECT DISTINCT(title), job.id  FROM job GROUP BY title;";
+    connection.query(selectJob, (err, res) => {
+      const jobChoices = [];
+      res.forEach((job) => {
+        let obj = {};
+        Object.assign(obj, {
+          name: `${job.title}`,
+        });
+        Object.assign(obj, { value: `${job.id}` });
+        jobChoices.push(...[obj]);
+      });
+      resolve(jobChoices);
+    });
+  });
+}
+//End of job functions
+//Beggining of employee functions
 function addEmployee(employee) {
   return new Promise(function (resolve, reject) {
     const sql = "INSERT INTO employee SET ?";
@@ -78,11 +124,25 @@ function getEmployees() {
     });
   });
 }
+function deleteEmployee(employee) {
+  return new Promise(function (resolve, reject) {
+    const sql = "DELETE FROM employee WHERE ?";
+    connection.query(sql, { id: employee.remove }, (err, res) => {
+      if (err) {
+        return reject(
+          "Please remove all employees from this manager before deleting"
+        );
+      }
+      resolve(console.log(`Removed employee from database`));
+    });
+  });
+}
+//End of Employee functions
 
 function getManagers() {
   return new Promise(function (resolve, reject) {
     const selectManager =
-      "SELECT employee.first_name, employee.last_name, employee.id FROM employee LEFT JOIN role ON employee.role_id = role.id WHERE role.title = 'Manager'";
+      "SELECT employee.first_name, employee.last_name, employee.id FROM employee LEFT JOIN job ON employee.job_id = job.id WHERE job.title = 'Manager'";
     connection.query(selectManager, (err, res) => {
       const managerChoices = [{ name: "None", value: null }];
       res.forEach((manager) => {
@@ -98,13 +158,17 @@ function getManagers() {
   });
 }
 
-//TODO: make functions that add roles and departments
+//TODO: make functions that add jobs and departments
 //TODO: make functions that update job department and employees
-//TODO: make functions that delete employee roles and departments
+//TODO: make functions that delete employee jobs and departments
 //TODO make function to get list of managers
 module.exports = {
   addEmployee: addEmployee,
   addJob: addJob,
+  getJob: getJob,
+  deleteJob: deleteJob,
+  viewJob: viewJob,
+
   //addDepartment: addDepartment,
   getManagers: getManagers,
   getEmployees: getEmployees,
