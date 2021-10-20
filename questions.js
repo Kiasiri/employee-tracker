@@ -10,6 +10,7 @@ const selectionChoices = [
   "View all Employees By Department",
   "View all Employees By Manager",
   "Add Employee",
+  "Add Department",
   "Remove Employee",
   "Remove Department",
   "Remove Job",
@@ -26,6 +27,18 @@ const choose = [
     type: "list",
     message: "What would you like to do?",
     choices: selectionChoices,
+  },
+];
+
+const addJob = [
+  { name: "name", type: "input", message: "What job do you want to add?" },
+];
+
+const addDepartment = [
+  {
+    name: "name",
+    type: "input",
+    message: "What department do you want to add?",
   },
 ];
 
@@ -118,6 +131,7 @@ const deleteDeptQuestion = [
     choices: getDepartment,
   },
 ];
+
 module.exports = {
   addEmployeeQuestions: addEmployeeQuestions,
   choose: choose,
@@ -126,4 +140,6 @@ module.exports = {
   removeEmployee: removeEmployee,
   deleteJobQuestion: deleteJobQuestion,
   deleteDeptQuestion: deleteDeptQuestion,
+  addDepartment: addDepartment,
+  addJobQuestion: addJob,
 };
