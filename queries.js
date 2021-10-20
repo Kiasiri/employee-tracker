@@ -137,6 +137,22 @@ function deleteEmployee(employee) {
     });
   });
 }
+
+function updateEmployeeManager(employee) {
+  return new Promise(function (resolve, reject) {
+    const updateArr = [
+      { manager_id: employee.updateManager },
+      { id: employee.name },
+    ];
+    const sql = "UPDATE employee SET ? WHERE ?";
+    connection.query(sql, updateArr, (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(console.log(`Employee's manager updated!`));
+    });
+  });
+}
 //End of Employee functions
 
 function getManagers() {
@@ -157,19 +173,43 @@ function getManagers() {
     });
   });
 }
+function getDeptartment() {
+  return new Promise(function (resolve, reject) {
+    const selectDept = "SELECT department.name, department.id FROM department";
+    connection.query(selectDept, (err, res) => {
+      if (err) throw err;
+      const deptChoices = [];
+      res.forEach((dept) => {
+        let obj = {};
+        Object.assign(obj, {
+          name: `${dept.name}`,
+        });
+        Object.assign(obj, { value: `${dept.id}` });
+        deptChoices.push(...[obj]);
+      });
+      resolve(deptChoices);
+    });
+  });
+}
 
-//TODO: make functions that add jobs and departments
-//TODO: make functions that update job department and employees
-//TODO: make functions that delete employee jobs and departments
-//TODO make function to get list of managers
+//TODO: make function that add departments
+//TODO: make functions that update department and employees
+//TODO: make functions that delete departments
+//Using export list as a pseudo checklist
 module.exports = {
   addEmployee: addEmployee,
   addJob: addJob,
   getJob: getJob,
   deleteJob: deleteJob,
   viewJob: viewJob,
-
-  //addDepartment: addDepartment,
+  deleteEmployee: deleteEmployee,
+  addDepartment: addDepartment,
   getManagers: getManagers,
   getEmployees: getEmployees,
+  updateEmployeeManager: updateEmployeeManager,
+  getDepartment: getDeptartment,
+  deleteDepartment: deleteDepartment,
+  updateEmployeeJob: updateEmployeeJob,
+  viewEmployee: viewEmployee,
+  viewBudget: viewBudget,
 };
