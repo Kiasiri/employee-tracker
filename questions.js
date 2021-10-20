@@ -86,8 +86,9 @@ const updateJob = [
   },
   {
     name: "updateJob",
-    type: "input",
+    type: "list",
     message: "Which new job will the employee now assume?",
+    choices: getJob,
   },
 ];
 
