@@ -1,4 +1,9 @@
-const { getManagers, getEmployees, getJob } = require("./queries");
+const {
+  getManagers,
+  getEmployees,
+  getJob,
+  getDepartment,
+} = require("./queries");
 
 const selectionChoices = [
   "View all Employees",
@@ -95,7 +100,7 @@ const removeEmployee = [
   },
 ];
 
-const deleteJob = [
+const deleteJobQuestion = [
   {
     name: "job",
     message: "Which job would you like to remove?",
@@ -109,7 +114,7 @@ const deleteDeptQuestion = [
     name: "dept",
     message: "Which department would you like to remove?",
     type: "list",
-    choices: getDept,
+    choices: getDepartment,
   },
 ];
 module.exports = {
@@ -118,6 +123,6 @@ module.exports = {
   updateManager: updateManager,
   updateJob: updateJob,
   removeEmployee: removeEmployee,
-  deleteJob: deleteJob,
+  deleteJobQuestion: deleteJobQuestion,
   deleteDeptQuestion: deleteDeptQuestion,
 };
