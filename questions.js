@@ -59,7 +59,7 @@ const addEmployeeQuestions = [
     name: "manager",
     type: "list",
     message: "Who is the employee's manager?",
-    choices: getManagers,
+    choices: getEmployees,
   },
 ];
 const updateManager = [
