@@ -109,8 +109,8 @@ function addEmployee(employee) {
     connection.query(
       sql,
       {
-        first_name: employee.first_name,
-        last_name: employee.last_name,
+        fname: employee.first_name,
+        lname: employee.last_name,
         job_id: employee.job_id,
         manager_id: employee.manager,
       },
@@ -195,14 +195,14 @@ function getManagers() {
 function getDepartment() {
   return new Promise(function (resolve, reject) {
     const selectDepartment =
-      "SELECT department.name, department.id FROM department";
+      "SELECT department.title, department.id FROM department";
     connection.query(selectDepartment, (err, res) => {
       if (err) throw err;
       const departmentChoices = [];
       res.forEach((department) => {
         let obj = {};
         Object.assign(obj, {
-          name: `${department.name}`,
+          name: `${department.title}`,
         });
         Object.assign(obj, { value: `${department.id}` });
         departmentChoices.push(...[obj]);
@@ -229,7 +229,7 @@ function deleteDepartment(remove) {
 function viewBudget() {
   return new Promise(function (resolve, reject) {
     const sql =
-      "SELECT department.name as 'Department', Sum(job.salary) AS Budget FROM department RIGHT JOIN job on job.department_id = department.id GROUP BY department.name;";
+      "SELECT department.title as 'Department', Sum(job.salary) AS Budget FROM department RIGHT JOIN job on job.department_id = department.id GROUP BY department.title;";
     connection.query(sql, (err, res) => {
       if (err) {
         return reject(err);
@@ -238,6 +238,85 @@ function viewBudget() {
     });
   });
 }
+
+function viewEmployee(byDepartment, byManager) {
+  return new Promise(function (resolve, reject) {
+    if (byDepartment === true) {
+      const queryDepartment =
+        "SELECT CONCAT(employee.first_name, ' ', employee.last_name) AS 'Employee Name', department.title AS 'Department' FROM employee LEFT JOIN job ON employee.job_id = job.id LEFT JOIN department ON job.department_id = department.id ORDER BY Department, employee.last_name;";
+      connection.query(queryDepartment, (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(console.table(res));
+      });
+    } else if (byManager === true) {
+      const queryManager =
+        "SELECT CONCAT(employee1.first_name, ' ', employee1.last_name) AS 'Employee Name', CONCAT(employee.first_name, ' ', employee.last_name) AS 'Manager' FROM employee as employee1 INNER JOIN employee ON employee1.manager_id = employee.id ORDER BY Manager, employee.last_name;";
+      connection.query(queryManager, (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(console.table(res));
+      });
+    } else {
+      const queryAll =
+        "SELECT CONCAT(employee.first_name, ' ', employee.last_name) AS 'Employee Name', department.title AS 'Department', job.title AS 'Title', job.salary AS 'Salary', CONCAT(employee1.first_name, ' ', employee1.last_name) AS 'Manager' FROM employee LEFT JOIN employee AS employee1 ON employee.manager_id = employee1.id LEFT JOIN job ON employee.job_id = job.id LEFT JOIN department ON job.department_id = department.id ORDER BY employee.last_name;";
+      connection.query(queryAll, (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(console.table(res));
+      });
+    }
+  });
+}
+
+function addDepartment(dept) {
+  return new Promise(function (resolve, reject) {
+    loop();
+    function loop() {
+      const selectDept = "SELECT ? FROM department";
+      connection.query(selectDept, { name: dept.title }, (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        const valueArray = [];
+        res.forEach((i) => {
+          valueArray.push(...Object.values(i));
+        });
+        if (valueArray.indexOf(1) !== -1) {
+          const getId = "SELECT department.id FROM department WHERE ?";
+          connection.query(getId, { name: dept.name }, (err, res) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve(res[0].id);
+          });
+        } else {
+          console.log(
+            `${dept.name} department not found in database, creating new department`
+          );
+          const insertDept = "INSERT INTO department SET ?";
+          connection.query(
+            insertDept,
+            {
+              name: dept.name,
+            },
+            (err, res) => {
+              if (err) {
+                return reject(err);
+              }
+              console.log(`Department created!`);
+              loop();
+            }
+          );
+        }
+      });
+    }
+  });
+}
+
 //TODO: make function that add departments
 //TODO: make functions that update department and employees
 //TODO: make functions that delete departments

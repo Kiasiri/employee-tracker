@@ -6,11 +6,24 @@ const {
   updateManager,
   updateJob,
   deleteJobQuestion,
-  updateEmployee,
+  deleteDeptQuestion,
+  removeEmployee,
 } = require("./questions");
 const mysql = require("mysql2");
 const { Department, Employee, Job } = require("./constructors");
-const { addJob, addEmployee, deleteJob } = require("./queries");
+const {
+  addJob,
+  addEmployee,
+  addDepartment, //TODO:make this function in queries.
+  deleteJob,
+  viewJob,
+  viewEmployee, //TODO:make this function in queries.
+  viewBudget,
+  deleteEmployee,
+  deleteDepartment,
+  updateEmployeeJob,
+  updateEmployeeManager,
+} = require("./queries");
 const connection = mysql.createConnection({
   host: "localhost",
   user: process.env.user,
@@ -33,13 +46,13 @@ async function selectionFunc() {
         process.exit();
       case "Add Employee":
         let employeeData = await inquirer(addEmployeeQuestions);
-        const dept = new Department(employeeData.department);
-        let deptId = await addDepartment(dept);
+        const department = new Department(employeeData.department);
+        let deptId = await addDepartment(department);
         const job = new Job(employeeData.job, employeeData.salary, deptId);
         let jobId = await addJob(job);
         const employee = new Employee(
-          employeeData.fname,
-          employeeData.lname,
+          employeeData.first_name,
+          employeeData.last_name,
           jobId,
           employeeData.manager
         );
@@ -48,7 +61,47 @@ async function selectionFunc() {
         break;
       case "Remove Job":
         let deleteJobAnswer = await inquirer(deleteJobQuestion);
-        await deleteRole(deleteJobAnswer);
+        await deleteJob(deleteJobAnswer);
+        selectionFunc();
+        break;
+      case "Remove Department":
+        let deleteDept = await inquirer(deleteDeptQuestion);
+        await deleteDepartment(deleteDept);
+        selectionFunc();
+        break;
+      case "View Department Budget":
+        await viewBudget();
+        selectionFunc();
+        break;
+      case "View All Jobs":
+        await viewJob();
+        selectionFunc();
+        break;
+      case "Remove Employee":
+        let erased = await inquirer(removeEmployee);
+        await deleteEmployee(erased);
+        selectionFunc();
+        break;
+      case "View all Employees":
+        await viewEmployee();
+        selectionFunc();
+        break;
+      case "View all Employees By Department":
+        await viewEmployee(true);
+        selectionFunc();
+        break;
+      case "View all Employees By Manager":
+        await viewEmployee("", true);
+        selectionFunc();
+        break;
+      case "Update Employee Job":
+        let updatedJob = await inquirer(updateJob);
+        await updateEmployeeJob(updatedJob);
+        selectionFunc();
+        break;
+      case "Update Employee Manager":
+        let updatedManager = await inquirer(updateManager);
+        await updateEmployeeManager(updatedManager);
         selectionFunc();
         break;
     }
