@@ -5,8 +5,8 @@ function Employee(fname, lname, role, manager) {
   this.manager = manager;
 }
 
-function Department(name) {
-  this.name = name;
+function Department(title) {
+  this.title = title;
 }
 
 function Job(title, salary, department) {

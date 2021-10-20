@@ -14,11 +14,11 @@ const { Department, Employee, Job } = require("./constructors");
 const {
   addJob,
   addEmployee,
-  addDepartment, //TODO:make this function in queries.
-  deleteJob,
+  addDepartment,
   viewJob,
-  viewEmployee, //TODO:make this function in queries.
+  viewEmployee,
   viewBudget,
+  deleteJob,
   deleteEmployee,
   deleteDepartment,
   updateEmployeeJob,
@@ -46,6 +46,7 @@ async function selectionFunc() {
         process.exit();
       case "Add Employee":
         let employeeData = await inquirer(addEmployeeQuestions);
+        console.log(employeeData);
         const department = new Department(employeeData.department);
         let deptId = await addDepartment(department);
         const job = new Job(employeeData.job, employeeData.salary, deptId);
@@ -57,6 +58,7 @@ async function selectionFunc() {
           employeeData.manager
         );
         await addEmployee(employee);
+        console.log(employee);
         selectionFunc();
         break;
       case "Remove Job":
@@ -109,3 +111,4 @@ async function selectionFunc() {
     console.error(error);
   }
 }
+module.exports = { selectionFunc: selectionFunc };

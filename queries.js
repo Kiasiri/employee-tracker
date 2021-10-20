@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+const { selectionFunc } = require("./index");
 const connection = mysql.createConnection({
   host: "localhost",
   user: process.env.user,
@@ -54,7 +55,7 @@ function deleteJob(remove) {
 
 function viewJob() {
   return new Promise(function (resolve, reject) {
-    const sql = "SELECT DISTINCT(title) FROM employee_tracker.job;";
+    const sql = "SELECT DISTINCT(title) FROM employee_db.job;";
     connection.query(sql, (err, res) => {
       if (err) {
         return reject(err);
@@ -84,7 +85,7 @@ function getJob() {
 }
 
 //End of job functions
-//update emplyee job
+//update employee job
 
 function updateEmployeeJob(employee) {
   return new Promise(function (resolve, reject) {
@@ -97,7 +98,7 @@ function updateEmployeeJob(employee) {
       if (err) {
         return reject(err);
       }
-      resolve(console.log(`Employee's job changed!`));
+      resolve(console.log(`Employee's job changed`));
     });
   });
 }
@@ -105,22 +106,13 @@ function updateEmployeeJob(employee) {
 //Beggining of employee functions
 function addEmployee(employee) {
   return new Promise(function (resolve, reject) {
-    const sql = "INSERT INTO employee SET ?";
-    connection.query(
-      sql,
-      {
-        fname: employee.first_name,
-        lname: employee.last_name,
-        job_id: employee.job_id,
-        manager_id: employee.manager,
-      },
-      (err, res) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(console.log(`New employee added`));
+    const sql = "INSERT INTO employee Values ()  ";
+    connection.query(sql, employee, function (err, res) {
+      if (err) {
+        reject(err);
       }
-    );
+      resolve(console.log(`New employee added`));
+    });
   });
 }
 
@@ -143,6 +135,7 @@ function getEmployees() {
     });
   });
 }
+//working
 function deleteEmployee(employee) {
   return new Promise(function (resolve, reject) {
     const sql = "DELETE FROM employee WHERE ?";
@@ -272,22 +265,23 @@ function viewEmployee(byDepartment, byManager) {
   });
 }
 
-function addDepartment(dept) {
+function addDepartment(department) {
   return new Promise(function (resolve, reject) {
-    loop();
-    function loop() {
-      const selectDept = "SELECT ? FROM department";
-      connection.query(selectDept, { name: dept.title }, (err, res) => {
+    redo();
+    function redo() {
+      const selectDept = "SELECT * FROM department where title = ?";
+      connection.query(selectDept, [department.title], function (err, res) {
         if (err) {
           return reject(err);
         }
+        console.log("found nothing");
         const valueArray = [];
         res.forEach((i) => {
           valueArray.push(...Object.values(i));
         });
         if (valueArray.indexOf(1) !== -1) {
-          const getId = "SELECT department.id FROM department WHERE ?";
-          connection.query(getId, { name: dept.name }, (err, res) => {
+          const getId = "SELECT id FROM department WHERE ?";
+          connection.query(getId, [department.title], (err, res) => {
             if (err) {
               return reject(err);
             }
@@ -295,23 +289,18 @@ function addDepartment(dept) {
           });
         } else {
           console.log(
-            `${dept.name} department not found in database, creating new department`
+            `${department.title} department not found in database, creating new department`
           );
-          const insertDept = "INSERT INTO department SET ?";
-          connection.query(
-            insertDept,
-            {
-              name: dept.name,
-            },
-            (err, res) => {
-              if (err) {
-                return reject(err);
-              }
-              console.log(`Department created!`);
-              loop();
+          const insertDept = "INSERT INTO department (title) VALUES (?)";
+          connection.query(insertDept, [department.title], function (err, res) {
+            if (err) {
+              return reject(err);
             }
-          );
+            console.log(`Department created!`);
+            console.log(res);
+          });
         }
+        //selectionFunc();
       });
     }
   });
