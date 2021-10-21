@@ -26,9 +26,9 @@ operate the index.js file with node make sure to install all prereuisites
 
 This project is covered under the MIT license.
 
-## Tests
+## Video
 
-No tests
+https://watch.screencastify.com/v/GICdIg0J3YVVGFZVJ8K8
 
 ## Questions
 
