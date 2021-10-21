@@ -61,6 +61,10 @@ async function selectionFunc() {
         console.log(employee);
         selectionFunc();
         break;
+      case "View All Departments":
+        await viewJob();
+        selectionFunc();
+        break;
       case "Remove Job":
         let deleteJobAnswer = await inquirer(deleteJobQuestion);
         await deleteJob(deleteJobAnswer);
@@ -76,7 +80,7 @@ async function selectionFunc() {
         selectionFunc();
         break;
       case "View All Jobs":
-        await viewJob();
+        console.table(await getJobs());
         selectionFunc();
         break;
       case "Remove Employee":

@@ -8,32 +8,20 @@ const connection = mysql.createConnection({
 });
 //Beggining of job funcions
 function addJob(job) {
-  const sql = "INSERT INTO job SET ?";
-  connection.query(
-    sql,
-    {
-      title: job.title,
-      salary: job.salary,
-      department_id: job.department_id,
-    },
-    (err, res) => {
-      if (err) throw err;
-    }
-  );
   return new Promise(function (resolve, reject) {
-    const sql = "SELECT * FROM job WHERE ? AND ? AND ?";
+    const sql = "INSERT INTO job set ?";
     connection.query(
       sql,
-      [
-        { title: job.title },
-        { salary: job.salary },
-        { department_id: job.department_id },
-      ],
-      (err, res) => {
+      {
+        title: job.title,
+        salary: job.salary,
+        department_id: job.department_id,
+      },
+      function (err, res) {
         if (err) {
           return reject(err);
         }
-        resolve(res[0].id);
+        resolve(res.id);
       }
     );
   });
@@ -42,7 +30,7 @@ function addJob(job) {
 function deleteJob(remove) {
   return new Promise(function (resolve, reject) {
     const sql = "DELETE FROM job WHERE ?";
-    connection.query(sql, { id: remove.job }, (err, res) => {
+    connection.query(sql, [remove.job], function (err, res) {
       if (err) {
         return reject(
           "Please remove  all employees from this job before deleting"
@@ -55,8 +43,8 @@ function deleteJob(remove) {
 
 function viewJob() {
   return new Promise(function (resolve, reject) {
-    const sql = "SELECT DISTINCT(title) FROM employee_db.job;";
-    connection.query(sql, (err, res) => {
+    const sql = "SELECT DISTINCT(title) FROM job;";
+    connection.query(sql, function (err, res) {
       if (err) {
         return reject(err);
       }
@@ -64,12 +52,22 @@ function viewJob() {
     });
   });
 }
-
+function getJobs() {
+  return new Promise(function (resolve, reject) {
+    const sql = "SELECT DISTINCT(title) FROM job;";
+    connection.query(sql, function (err, res) {
+      if (err) {
+        return reject(err);
+      }
+      resolve(res);
+    });
+  });
+}
 function getJob() {
   return new Promise(function (resolve, reject) {
     const selectJob =
       "SELECT DISTINCT(title), job.id  FROM job GROUP BY title;";
-    connection.query(selectJob, (err, res) => {
+    connection.query(selectJob, function (err, res) {
       const jobChoices = [];
       res.forEach((job) => {
         let obj = {};
@@ -89,12 +87,9 @@ function getJob() {
 
 function updateEmployeeJob(employee) {
   return new Promise(function (resolve, reject) {
-    const employeeJobId = [
-      { title: employee.updateJob },
-      { id: employee.name },
-    ];
+    const employeeJobId = [employee.updateJob, employee.last_name];
     const sql = "UPDATE job SET ? WHERE ?";
-    connection.query(sql, employeeJobId, (err, res) => {
+    connection.query(sql, employeeJobId, function (err, res) {
       if (err) {
         return reject(err);
       }
@@ -106,13 +101,22 @@ function updateEmployeeJob(employee) {
 //Beggining of employee functions
 function addEmployee(employee) {
   return new Promise(function (resolve, reject) {
-    const sql = "INSERT INTO employee Values ()  ";
-    connection.query(sql, employee, function (err, res) {
-      if (err) {
-        reject(err);
+    const sql = "INSERT INTO employee set ?";
+    connection.query(
+      sql,
+      {
+        first_name: employee.first_name,
+        last_name: employee.last_name,
+        job_id: employee.job_id,
+        manager_id: employee.manager_id,
+      },
+      function (err, res) {
+        if (err) {
+          reject(err);
+        }
+        resolve(res.id);
       }
-      resolve(console.log(`New employee added`));
-    });
+    );
   });
 }
 
@@ -120,7 +124,7 @@ function getEmployees() {
   return new Promise(function (resolve, reject) {
     const selectEmployee =
       "SELECT employee.first_name, employee.last_name, employee.id FROM employee";
-    connection.query(selectEmployee, (err, res) => {
+    connection.query(selectEmployee, function (err, res) {
       if (err) throw err;
       const employeeChoices = [];
       res.forEach((employee) => {
@@ -267,49 +271,16 @@ function viewEmployee(byDepartment, byManager) {
 
 function addDepartment(department) {
   return new Promise(function (resolve, reject) {
-    redo();
-    function redo() {
-      const selectDept = "SELECT * FROM department where title = ?";
-      connection.query(selectDept, [department.title], function (err, res) {
-        if (err) {
-          return reject(err);
-        }
-        console.log("found nothing");
-        const valueArray = [];
-        res.forEach((i) => {
-          valueArray.push(...Object.values(i));
-        });
-        if (valueArray.indexOf(1) !== -1) {
-          const getId = "SELECT id FROM department WHERE ?";
-          connection.query(getId, [department.title], (err, res) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve(res[0].id);
-          });
-        } else {
-          console.log(
-            `${department.title} department not found in database, creating new department`
-          );
-          const insertDept = "INSERT INTO department (title) VALUES (?)";
-          connection.query(insertDept, [department.title], function (err, res) {
-            if (err) {
-              return reject(err);
-            }
-            console.log(`Department created!`);
-            console.log(res);
-          });
-        }
-        //selectionFunc();
-      });
-    }
+    const insertDept = "INSERT INTO department (title) VALUES (?)";
+    connection.query(insertDept, [department.title], function (err, res) {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(res.id);
+    });
   });
 }
 
-//TODO: make function that add departments
-//TODO: make functions that update department and employees
-//TODO: make functions that delete departments
-//Using export list as a pseudo checklist
 module.exports = {
   addEmployee: addEmployee,
   addJob: addJob,

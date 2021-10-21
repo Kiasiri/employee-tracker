@@ -44,12 +44,12 @@ const addDepartment = [
 
 const addEmployeeQuestions = [
   {
-    name: "fname",
+    name: "first_name",
     type: "input",
     message: "What is the employee's first name?",
   },
   {
-    name: "lname",
+    name: "last_name",
     type: "input",
     message: "What is the employee's last name?",
   },
@@ -101,7 +101,7 @@ const updateJob = [
     name: "updateJob",
     type: "list",
     message: "Which new job will the employee now assume?",
-    choices: getJob,
+    choices: getJobs,
   },
 ];
 
